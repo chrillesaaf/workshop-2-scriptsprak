@@ -1,17 +1,23 @@
+---------------------------------------------
 Show sites and analytic period: 
-"Huvudkontor": ['36', '37', '38', '39']
-"Lager": ['36', '37', '38']
-"Datacenter": ['36', '37', '38', '39']
-"Kontor Malmö": ['36', '37', '38']
-"Säkerhetskopia": ['36', '37', '38']
+---------------------------------------------
+Huvudkontor: ['36', '37', '38', '39']
+Lager: ['36', '37', '38']
+Datacenter: ['36', '37', '38', '39']
+Kontor Malmö: ['36', '37', '38']
+Säkerhetskopia: ['36', '37', '38']
 
+---------------------------------------------
 Incident count by severity:
-Low: 12
-Medium: 17
-High: 13
+---------------------------------------------
 Critical: 10
+High: 13
+Medium: 17
+Low: 12
 
+---------------------------------------------
 Incidents affecting more than 100 users:
+---------------------------------------------
 - TECH-2024-006: Switch unresponsive - causing widespread connectivity issues (156 users)
 - TECH-2024-014: Temperature alarm triggered - potential cooling issue (123 users)
 - TECH-2024-022: Top of rack switch completely unresponsive (189 users)
@@ -21,3 +27,12 @@ Incidents affecting more than 100 users:
 - TECH-2024-039: Load balancer failover not working correctly (198 users)
 - TECH-2024-047: Core switch showing intermittent packet drops (123 users)
 - TECH-2024-052: Firewall blocking critical business application traffic (178 users)
+
+---------------------------------------------
+Top 5 most expensive incidents:
+---------------------------------------------
+- TECH-2024-024: 45678.90 SEK
+- TECH-2024-022: 34567.50 SEK
+- TECH-2024-040: 28765.50 SEK
+- TECH-2024-049: 26789.75 SEK
+- TECH-2024-037: 24567.25 SEK
