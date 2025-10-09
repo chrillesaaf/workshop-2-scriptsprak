@@ -89,6 +89,15 @@ report += "---------------------------------------------\n"
 for ticket, cost in top_cost_dict.items():
     report += (f'- {ticket}: {cost:.2f} SEK\n')
 
+# Calculate total cost using list comprehension + sum
+total_cost = sum(row['cost_sek'] for row in incidents)
+
+# Show result
+report += "\n---------------------------------------------\n"
+report += (f'Total cost of all incidents: {total_cost:.2f} SEK\n')
+report += "---------------------------------------------\n"
+
+
 # write the report to text file
 with open('workshop_2.txt', 'w', encoding='utf-8') as f:
     f.write(report)
