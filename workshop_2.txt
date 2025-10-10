@@ -38,5 +38,14 @@ Top 5 most expensive incidents:
 - TECH-2024-037: 24567.25 SEK
 
 ---------------------------------------------
-Total cost of all incidents: 445910.10 SEK
+Total cost of all incidents:
 ---------------------------------------------
+ 445910.10 SEK
+
+---------------------------------------------
+Average resolution time per severity level:
+---------------------------------------------
+Critical: 118.8 minutes
+High: 108.46 minutes
+Medium: 113.24 minutes
+Low: 107.08 minutes

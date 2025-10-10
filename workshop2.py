@@ -15,7 +15,9 @@ with open('network_incidents.csv', encoding='utf-8') as f:
     incidents = [
         {
             **row,
-            'cost_sek': parse_swe_cost(row['cost_sek'])
+            'cost_sek': parse_swe_cost(row['cost_sek']),
+            'resolution_minutes': int(row['resolution_minutes']) if row['resolution_minutes'].isdigit() else 0,
+            'severity': row['severity'].lower()
         }
         for row in csv.DictReader(f)
     ] 
@@ -54,9 +56,9 @@ severity_count = {
 }
 
 # Show result
-report += "\n---------------------------------------------\n"
+report += '\n---------------------------------------------\n'
 report += ('Incident count by severity:\n')
-report += "---------------------------------------------\n"
+report += '---------------------------------------------\n'
 for level, count in severity_count.items():
     report += (f'{level.capitalize()}: {count}\n')
 
@@ -67,9 +69,9 @@ high_incidents = [
 ]
 
 # Show result
-report += "\n---------------------------------------------\n"
+report += '\n---------------------------------------------\n'
 report += ('Incidents affecting more than 100 users:\n')
-report += "---------------------------------------------\n"
+report += '---------------------------------------------\n'
 for incident in high_incidents:
     report += (f'- {incident['ticket_id']}: {incident['description']} ({incident['affected_users']} users)\n')
 
@@ -83,9 +85,9 @@ top_cost_dict = {
 }
 
 # Show result
-report += "\n---------------------------------------------\n"
+report += '\n---------------------------------------------\n'
 report += ('Top 5 most expensive incidents:\n')
-report += "---------------------------------------------\n"
+report += '---------------------------------------------\n'
 for ticket, cost in top_cost_dict.items():
     report += (f'- {ticket}: {cost:.2f} SEK\n')
 
@@ -93,10 +95,28 @@ for ticket, cost in top_cost_dict.items():
 total_cost = sum(row['cost_sek'] for row in incidents)
 
 # Show result
-report += "\n---------------------------------------------\n"
-report += (f'Total cost of all incidents: {total_cost:.2f} SEK\n')
-report += "---------------------------------------------\n"
+report += '\n---------------------------------------------\n'
+report += 'Total cost of all incidents:\n'
+report += '---------------------------------------------\n'
+report += (f' {total_cost:.2f} SEK\n')
 
+
+# Calculate average resolution time per severity
+avg_resolution = {
+    level: round(
+        sum(row['resolution_minutes'] for row in incidents if row['severity'] == level) / 
+        max(1, sum(1 for row in incidents if row['severity'] == level)),
+        2
+    )
+    for level in severity_levels
+}
+
+# Show result
+report += '\n---------------------------------------------\n'
+report += ('Average resolution time per severity level:\n')
+report += '---------------------------------------------\n'
+for level, avg in avg_resolution.items():
+    report += (f'{level.capitalize()}: {avg} minutes\n')
 
 # write the report to text file
 with open('workshop_2.txt', 'w', encoding='utf-8') as f:
