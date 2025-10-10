@@ -1,5 +1,5 @@
 ---------------------------------------------
-Show sites and analytic period: 
+Show sites and analytic period
 ---------------------------------------------
 SITE                 WEEKS ANALYZED
 Huvudkontor          36, 37, 38, 39
@@ -9,7 +9,7 @@ Kontor Malmö         36, 37, 38
 Säkerhetskopia       36, 37, 38
 
 ---------------------------------------------
-Incident count by severity:
+Incident count by severity
 ---------------------------------------------
 SEVERITY     COUNT
 Critical     10
@@ -18,7 +18,7 @@ Medium       17
 Low          12
 
 ---------------------------------------------
-Incidents affecting more than 100 users:
+Incidents affecting more than 100 users
 ---------------------------------------------
 TECH-2024-026   Datacenter      234 affected users
 TECH-2024-039   Datacenter      198 affected users
@@ -31,39 +31,39 @@ TECH-2024-014   Datacenter      123 affected users
 TECH-2024-047   Datacenter      123 affected users
 
 ---------------------------------------------
-Top 5 most expensive incidents:
+Top 5 most expensive incidents
 ---------------------------------------------
-- TECH-2024-024: 45678.90 SEK
-- TECH-2024-022: 34567.50 SEK
-- TECH-2024-040: 28765.50 SEK
-- TECH-2024-049: 26789.75 SEK
-- TECH-2024-037: 24567.25 SEK
+TECH-2024-024: 45 678,90 SEK
+TECH-2024-022: 34 567,50 SEK
+TECH-2024-040: 28 765,50 SEK
+TECH-2024-049: 26 789,75 SEK
+TECH-2024-037: 24 567,25 SEK
 
 ---------------------------------------------
-Total cost of all incidents:
+Total cost of all incidents
 ---------------------------------------------
- 445910.10 SEK
+Total cost: 445 910,10 SEK
 
 ---------------------------------------------
-Average resolution time per severity level:
+Average resolution time per severity level
 ---------------------------------------------
-Critical: 118.8 minutes
-High: 108.46 minutes
-Medium: 113.24 minutes
-Low: 107.08 minutes
+Critical     118.8 minutes
+High         108.46 minutes
+Medium       113.24 minutes
+Low          107.08 minutes
 
 ---------------------------------------------
-Incident overview per site:
+Incident overview per site
 ---------------------------------------------
-SITE              INCIDENTS    TOTAL COST (SEK)   AVG RESOLUTION (MIN)
-Säkerhetskopia    7            41716.00           112.86         
-Kontor Malmö      9            72714.50           107.22         
-Datacenter        13           139996.40          110.00         
-Huvudkontor       13           113353.80          103.85         
-Lager             10           78129.40           127.30         
+SITE              INCIDENTS    TOTAL COST (SEK)  AVG RESOLUTION (MIN)
+Lager             10           78 129,40 SEK     127.30         
+Säkerhetskopia    7            41 716,00 SEK     112.86         
+Huvudkontor       13           113 353,80 SEK    103.85         
+Kontor Malmö      9            72 714,50 SEK     107.22         
+Datacenter        13           139 996,40 SEK    110.00         
 
 ---------------------------------------------
-Average impact score per category:
+Average impact score per category
 ---------------------------------------------
 CATEGORY         AVG IMPACT SCORE
 Hardware         7.09
