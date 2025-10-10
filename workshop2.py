@@ -15,6 +15,7 @@ with open('network_incidents.csv', encoding='utf-8') as f:
     incidents = [
         {
             **row,
+            'site' :row['site'],
             'cost_sek': parse_swe_cost(row['cost_sek']),
             'resolution_minutes': int(row['resolution_minutes']) if row['resolution_minutes'].isdigit() else 0,
             'severity': row['severity'].lower()
@@ -43,8 +44,10 @@ weeks = {site: sorted(weeks) for site, weeks in weeks.items()}
 report += "---------------------------------------------\n"
 report += ('Show sites and analytic period: \n')
 report += "---------------------------------------------\n"
-for site, weeks in weeks.items():
-    report += (f'{site}: {weeks}\n')
+report += f"{'SITE'.ljust(20)} {'WEEKS ANALYZED'}\n"
+for site, weeks_list in weeks.items():
+    formatted_weeks = ", ".join(weeks_list)
+    report += f"{site.ljust(20)} {formatted_weeks}\n"
 
 # Define the severity levels you want to count
 severity_levels = ['critical', 'high', 'medium', 'low']
@@ -59,21 +62,28 @@ severity_count = {
 report += '\n---------------------------------------------\n'
 report += ('Incident count by severity:\n')
 report += '---------------------------------------------\n'
+report += f"{'SEVERITY'.ljust(12)} {'COUNT'}\n"
 for level, count in severity_count.items():
-    report += (f'{level.capitalize()}: {count}\n')
+    report += (
+        f'{level.capitalize().ljust(12)} {count}\n')
 
 # Filter incidents where affected_users > 100 using list comprehension
 high_incidents = [
     row for row in incidents
     if row['affected_users']. isdigit() and int(row['affected_users']) > 100
 ]
+high_incidents = sorted(high_incidents, key=lambda row: row['affected_users'], reverse=True)
 
 # Show result
 report += '\n---------------------------------------------\n'
 report += ('Incidents affecting more than 100 users:\n')
 report += '---------------------------------------------\n'
 for incident in high_incidents:
-    report += (f'- {incident['ticket_id']}: {incident['description']} ({incident['affected_users']} users)\n')
+    report += (
+            f"{str(incident['ticket_id']).ljust(15)} "
+            f"{incident['site'].ljust(13) }"
+            f"{str(incident['affected_users'])} affected users\n"
+    )
 
 # Sort incidents by cost_sek descending and take top 5
 top_5 = sorted(incidents, key=lambda row: row['cost_sek'], reverse=True)[:5]
@@ -100,7 +110,6 @@ report += 'Total cost of all incidents:\n'
 report += '---------------------------------------------\n'
 report += (f' {total_cost:.2f} SEK\n')
 
-
 # Calculate average resolution time per severity
 avg_resolution = {
     level: round(
@@ -117,6 +126,38 @@ report += ('Average resolution time per severity level:\n')
 report += '---------------------------------------------\n'
 for level, avg in avg_resolution.items():
     report += (f'{level.capitalize()}: {avg} minutes\n')
+
+# Get unique sites
+sites = set(row['site'] for row in incidents)
+
+# Build summary per site
+site_summary = {
+    site: {
+        'incident_count': sum(1 for row in incidents if row['site'] == site),
+        'total_cost': round(sum(row['cost_sek'] for row in incidents if row['site'] == site), 2),
+        'avg_resolution': round(
+            sum(row['resolution_minutes'] for row in incidents if row['site'] == site) /
+            max(1, sum(1 for row in incidents if row['site'] == site)),
+            2
+        )
+    }
+    for site in sites
+}
+
+# Show result
+report += '\n---------------------------------------------\n'
+report += ('Incident overview per site:\n')
+report += '---------------------------------------------\n'
+report += f"{'SITE'.ljust(17)} {'INCIDENTS'.ljust(12)} {'TOTAL COST (SEK)'.ljust(18)} {'AVG RESOLUTION (MIN)'}\n"
+for site, data in site_summary.items():
+    report += (
+        f"{site.ljust(17)} "
+        f"{str(data['incident_count']).ljust(12)} "
+        f"{f'{data['total_cost']:.2f}'.ljust(18)} "
+        f"{str(data['avg_resolution']).ljust(15)}\n"
+    )
+
+
 
 # write the report to text file
 with open('workshop_2.txt', 'w', encoding='utf-8') as f:
