@@ -18,7 +18,9 @@ with open('network_incidents.csv', encoding='utf-8') as f:
             'site' :row['site'],
             'cost_sek': parse_swe_cost(row['cost_sek']),
             'resolution_minutes': int(row['resolution_minutes']) if row['resolution_minutes'].isdigit() else 0,
-            'severity': row['severity'].lower()
+            'severity': row['severity'].lower(),
+            'category': row['category'].lower(),
+            'impact_score': float(row['impact_score']) if row['impact_score'].replace('.','', 1).isdigit() else 0.0
         }
         for row in csv.DictReader(f)
     ] 
@@ -81,7 +83,7 @@ report += '---------------------------------------------\n'
 for incident in high_incidents:
     report += (
             f"{str(incident['ticket_id']).ljust(15)} "
-            f"{incident['site'].ljust(13) }"
+            f"{incident['site'].ljust(16)}"
             f"{str(incident['affected_users'])} affected users\n"
     )
 
@@ -148,16 +150,34 @@ site_summary = {
 report += '\n---------------------------------------------\n'
 report += ('Incident overview per site:\n')
 report += '---------------------------------------------\n'
-report += f"{'SITE'.ljust(17)} {'INCIDENTS'.ljust(12)} {'TOTAL COST (SEK)'.ljust(18)} {'AVG RESOLUTION (MIN)'}\n"
+report += f'{'SITE'.ljust(17)} {'INCIDENTS'.ljust(12)} {'TOTAL COST (SEK)'.ljust(18)} {'AVG RESOLUTION (MIN)'}\n'
 for site, data in site_summary.items():
     report += (
         f"{site.ljust(17)} "
         f"{str(data['incident_count']).ljust(12)} "
         f"{f'{data['total_cost']:.2f}'.ljust(18)} "
-        f"{str(data['avg_resolution']).ljust(15)}\n"
+        f"{f'{data['avg_resolution']:.2f}'.ljust(15)}\n"
     )
 
+# Get unique categories
+categories = set(row['category'] for row in incidents)
 
+category_summary = {
+    cat: round(
+        sum(row['impact_score'] for row in incidents if row['category'] == cat) /
+        max(1, sum(1 for row in incidents if row['category'] == cat)),
+        2
+    )
+    for cat in categories
+}   
+
+report += '\n---------------------------------------------\n'
+report += 'Average impact score per category:\n'
+report += '---------------------------------------------\n'
+report += f"{'CATEGORY'.ljust(16)} {'AVG IMPACT SCORE'}\n"
+
+for cat, avg in sorted(category_summary.items(), key=lambda x: x[1], reverse=True):
+    report += f'{cat.capitalize().ljust(16)} {f'{avg:.2f}'}\n'
 
 # write the report to text file
 with open('workshop_2.txt', 'w', encoding='utf-8') as f:

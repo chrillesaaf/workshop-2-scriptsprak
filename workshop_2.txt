@@ -20,15 +20,15 @@ Low          12
 ---------------------------------------------
 Incidents affecting more than 100 users:
 ---------------------------------------------
-TECH-2024-026   Datacenter   234 affected users
-TECH-2024-039   Datacenter   198 affected users
-TECH-2024-022   Datacenter   189 affected users
-TECH-2024-052   Datacenter   178 affected users
-TECH-2024-034   Datacenter   167 affected users
-TECH-2024-006   Datacenter   156 affected users
-TECH-2024-030   Datacenter   145 affected users
-TECH-2024-014   Datacenter   123 affected users
-TECH-2024-047   Datacenter   123 affected users
+TECH-2024-026   Datacenter      234 affected users
+TECH-2024-039   Datacenter      198 affected users
+TECH-2024-022   Datacenter      189 affected users
+TECH-2024-052   Datacenter      178 affected users
+TECH-2024-034   Datacenter      167 affected users
+TECH-2024-006   Datacenter      156 affected users
+TECH-2024-030   Datacenter      145 affected users
+TECH-2024-014   Datacenter      123 affected users
+TECH-2024-047   Datacenter      123 affected users
 
 ---------------------------------------------
 Top 5 most expensive incidents:
@@ -56,8 +56,18 @@ Low: 107.08 minutes
 Incident overview per site:
 ---------------------------------------------
 SITE              INCIDENTS    TOTAL COST (SEK)   AVG RESOLUTION (MIN)
-Lager             10           78129.40           127.3          
-Huvudkontor       13           113353.80          103.85         
-Kontor Malmö      9            72714.50           107.22         
-Datacenter        13           139996.40          110.0          
 Säkerhetskopia    7            41716.00           112.86         
+Kontor Malmö      9            72714.50           107.22         
+Datacenter        13           139996.40          110.00         
+Huvudkontor       13           113353.80          103.85         
+Lager             10           78129.40           127.30         
+
+---------------------------------------------
+Average impact score per category:
+---------------------------------------------
+CATEGORY         AVG IMPACT SCORE
+Hardware         7.09
+Connectivity     6.80
+Wifi             6.30
+Performance      5.95
+Security         5.78
