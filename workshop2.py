@@ -1,6 +1,7 @@
 # Csv is a built-in Python library that let us read and write CSV-files
 import csv
 from collections import defaultdict
+from collections import Counter
 
 # Helper function to parse Swedish cost format
 def parse_swe_cost(cost_str):
@@ -64,7 +65,7 @@ weeks = {site: sorted(weeks) for site, weeks in weeks.items()}
 
 # Show result
 report += "---------------------------------------------\n"
-report += ('Show sites and analytic period\n')
+report += ('Show sites and analysis period\n')
 report += "---------------------------------------------\n"
 report += f"{'SITE'.ljust(20)} {'WEEKS ANALYZED'}\n"
 for site, weeks_list in weeks.items():
@@ -198,6 +199,54 @@ report += f"{'CATEGORY'.ljust(16)} {'AVG IMPACT SCORE'}\n"
 
 for cat, avg in sorted(category_summary.items(), key=lambda x: x[1], reverse=True):
     report += f'{cat.capitalize().ljust(16)} {f'{avg:.2f}'}\n'
+
+# Create a variable that holds our whole text report
+summary = ""
+
+summary += '==========================================================\n'
+summary += '             INCIDENT ANALYSIS - SEPTEMBER 2024\n'
+summary += '==========================================================\n'
+summary += 'Analysisperiod: 2024-09-01 to 2024-09-30\n'
+total_incidents = sum(severity_count.values())
+summary += f'{'Total incidents: '.ljust(12)} {total_incidents}\n'
+summary += (f'Total cost: {format_sek(total_cost)}\n')
+summary += '\nEXECUTIVE SUMMARY\n'
+summary += '--------------------\n'
+# Critial devices
+critical_incidents = [row for row in incidents if row['severity'] == 'critical']
+if critical_incidents:
+    from collections import Counter
+    device_counts = Counter(row['device_hostname'] for row in critical_incidents)
+    worst_device, count = device_counts.most_common(1)[0]
+    summary += f"⚠ CRITICAL: {worst_device} has {count} critical incidents (same device that had a warning last week!)\n"
+else:
+    summary += "✓ No critical incidents this period.\n"
+
+# Most expensive incident
+if incidents:
+    most_expensive = max(incidents, key=lambda x: x['cost_sek'])
+    summary += f"⚠ COST: Most expensive incident: {most_expensive['cost_sek_str']} ({most_expensive['device_hostname']} {most_expensive['category']})\n"
+
+# Recurring problem devices
+problem_devices = [row['device_hostname'] for row in incidents if row.get('previously_flagged', '').lower() == 'yes']
+unique_problem_devices = len(set(problem_devices))
+summary += f"⚠ {unique_problem_devices} devices from last week's 'problem devices' generated new incidents\n"
+
+# Check which sites have no critical incidents
+sites = set(row['site'] for row in incidents)
+critical_sites = {row['site'] for row in incidents if row['severity'] == 'critical'}
+
+no_critical_sites = sites - critical_sites
+
+if no_critical_sites:
+    summary += "✓ POSITIVE: No critical incidents at these sites:\n"
+    for site in sorted(no_critical_sites):
+        summary += f"  - {site}\n"
+else:
+    summary += "⚠ All sites had at least one critical incident.\n\n"
+
+# Add summary before main report
+report = summary + report
 
 # write the report to text file
 with open('report.txt', 'w', encoding='utf-8') as f:
