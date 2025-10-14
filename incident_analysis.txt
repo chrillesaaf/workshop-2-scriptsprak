@@ -6,11 +6,21 @@ Total incidents:  52
 Total cost: 445 910,10 SEK
 
 EXECUTIVE SUMMARY
---------------------
+----------------------------------------------------------
 ⚠ CRITICAL: SW-DC-TOR-02 has 3 critical incidents (same device that had a warning last week!)
 ⚠ COST: Most expensive incident: 45 678,90 SEK (SW-ACCESS-03 hardware)
 ⚠ 0 devices from last week's 'problem devices' generated new incidents
 ⚠ All sites had at least one critical incident.
+
+INCIDENTS PER SEVERITY
+---------------------------------------------
+Critical   10 st 19% - Average: 119 min resolution, 25 967,20 SEK /incident
+High       13 st 25% - Average: 108 min resolution, 8 251,60 SEK /incident
+Medium     17 st 33% - Average: 113 min resolution, 3 506,70 SEK /incident
+Low        12 st 23% - Average: 107 min resolution, 1 612,80 SEK /incident
+
+
+========================================================================================================
 
 ---------------------------------------------
 Show sites and analysis period
@@ -70,11 +80,11 @@ Low          107.08 minutes
 Incident overview per site
 ---------------------------------------------
 SITE              INCIDENTS    TOTAL COST (SEK)  AVG RESOLUTION (MIN)
-Säkerhetskopia    7            41 716,00 SEK     112.86         
-Kontor Malmö      9            72 714,50 SEK     107.22         
 Huvudkontor       13           113 353,80 SEK    103.85         
-Lager             10           78 129,40 SEK     127.30         
+Kontor Malmö      9            72 714,50 SEK     107.22         
 Datacenter        13           139 996,40 SEK    110.00         
+Säkerhetskopia    7            41 716,00 SEK     112.86         
+Lager             10           78 129,40 SEK     127.30         
 
 ---------------------------------------------
 Average impact score per category

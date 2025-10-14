@@ -211,7 +211,7 @@ total_incidents = sum(severity_count.values())
 summary += f'{'Total incidents: '.ljust(12)} {total_incidents}\n'
 summary += (f'Total cost: {format_sek(total_cost)}\n')
 summary += '\nEXECUTIVE SUMMARY\n'
-summary += '--------------------\n'
+summary += '----------------------------------------------------------\n'
 # Critial devices
 critical_incidents = [row for row in incidents if row['severity'] == 'critical']
 if critical_incidents:
@@ -243,13 +243,48 @@ if no_critical_sites:
     for site in sorted(no_critical_sites):
         summary += f"  - {site}\n"
 else:
-    summary += "⚠ All sites had at least one critical incident.\n\n"
+    summary += "⚠ All sites had at least one critical incident.\n"
 
+# Count how many incidents per severity
+severity_count = {
+    level: sum(1 for row in incidents if row.get('severity', '').lower() == level)
+    for level in severity_levels
+}
+
+# Total incidents for percentage calculation
+total_incidents = sum(severity_count.values()) or 1
+
+# Calculate average resolution time and cost per severity
+severity_stats = {}
+for level in severity_levels:
+    level_incidents =[row for row in incidents if row.get('severity', '').lower() == level]
+    count = len(level_incidents)
+    if count > 0:
+        avg_resolution = round(sum(row.get('resolution_minutes', 0) for row in level_incidents) / count, 1)
+        avg_cost = round(sum(row.get('cost_sek', 0) for row in level_incidents) / count, 1)
+        severity_stats[level] = (count, avg_resolution, avg_cost)
+    else:
+        severity_stats[level] = (0,0,0)
+
+summary += '\nINCIDENTS PER SEVERITY\n'
+summary += '---------------------------------------------\n'
+
+for level in severity_levels:
+    count, avg_resolution, avg_cost = severity_stats[level]
+    percent = (count / total_incidents) * 100
+    summary +=(
+        f'{level.capitalize():<10}'
+        f'{count:3} st {percent:.0f}% - '
+        f'Average: {avg_resolution:.0f} min resolution, '
+        f"{format_sek(avg_cost)} /incident\n"
+    )
+
+summary += '\n\n========================================================================================================\n\n'             
 # Add summary before main report
 report = summary + report
 
 # write the report to text file
-with open('report.txt', 'w', encoding='utf-8') as f:
+with open('incident_analysis.txt', 'w', encoding='utf-8') as f:
     f.write(report)
 
 # ---------------------------------------------------------------------------------------------------------------------------------
