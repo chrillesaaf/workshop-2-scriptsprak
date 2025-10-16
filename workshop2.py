@@ -288,7 +288,6 @@ with open('incident_analysis.txt', 'w', encoding='utf-8') as f:
     f.write(report)
 
 # ---------------------------------------------------------------------------------------------------------------------------------
-# Initialize summary dictionary
 
 def format_sek(amount):
     return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
@@ -303,21 +302,18 @@ site_summary = defaultdict(lambda: {
     'cost_total': 0.0
 })
 
-# Populate summary
-
 for row in incidents:
     site = row['site']
-    severity = row['severity']
+    severity = row['severity'].lower()
 
     site_summary[site]['total_incidents'] += 1
     site_summary[site][severity] += 1
     site_summary[site]['resolution_total'] += row['resolution_minutes']
     site_summary[site]['cost_total'] += row['cost_sek']
 
-with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
+#Write csv with DictWriter
 
-    writer.writerow([
+fieldnames = [
         'site',
         'total_incidents',
         'critical_incidents',
@@ -326,18 +322,104 @@ with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
         'low_incidents',
         'avg_resolution_minutes',
         'total_cost_sek'
-    ])
+    ]
+
+with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
 
     for site, data in site_summary.items():
         avg_resolution = round(data['resolution_total'] / max(1, data['total_incidents']), 2)
-        writer.writerow([
-            site,
-            data['total_incidents'],
-            data['critical'],
-            data['high'],
-            data['medium'],
-            data['low'],
-            avg_resolution,
-            round(data['resolution_total'] / max(1, data['total_incidents']), 2),
-            format_sek(data['cost_total'])
-        ])
+        writer.writerow({
+            'site': site,
+            'total_incidents': data['total_incidents'],
+            'critical_incidents': data['critical'],
+            'high_incidents': data['high'],
+            'medium_incidents': data['medium'],
+            'low_incidents': data['low'],
+            'avg_resolution_minutes': avg_resolution,
+            'total_cost_sek': format_sek(data['cost_total'])
+        })
+
+def format_sek(amount):
+    return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
+
+def get_device_type(hostname):
+    prefix = hostname[:3].upper()
+    if prefix.startswith('SW-'):
+        return 'switch'
+    elif prefix.startswith('RT-'):
+        return 'router'
+    elif prefix.startswith('AP-'):
+        return 'access_point'
+    elif prefix.startswith('FW-'):
+        return 'firewall'
+    elif prefix.startswith('LB-'):
+        return 'load_balancer'
+    else:
+        return 'unknown'
+
+device_summary ={}
+
+for row in incidents:
+    hostname = row['device_hostname']
+    if hostname not in device_summary:
+        device_summary[hostname] = {
+            'site' : row['site'],
+            'device_type' : get_device_type(hostname),
+            'incident_count' : 0,
+            'total_severity' : 0,
+            'total_cost' : 0.0,
+            'total_affected' : 0,
+            'in_last_weeks_warnings' : row.get('previously_flagged', 'no').lower() == 'yes'
+        }
+
+    device_summary[hostname]['incident_count'] += 1
+    device_summary[hostname]['total_severity'] += float(row.get('impact_score', 0))
+    device_summary[hostname]['total_cost'] += float(row.get('cost_sek', 0))
+    affected_value = row.get('affected_users', '').strip()
+    device_summary[hostname]['total_affected'] += int(affected_value) if affected_value.isdigit() else 0
+
+device_weeks = {}
+
+for row in incidents:
+    hostname = row['device_hostname']
+    week = int(row['week_number'])
+    device_weeks.setdefault(hostname, set()).add(week)
+
+for hostname, data in device_summary.items():
+    weeks =device_weeks.get(hostname, set())
+    current_week = max(weeks) if weeks else 0
+    had_last_week = (current_week - 1) in weeks
+    data['in_last_weeks_warnings'] = had_last_week
+
+problem_rows = []
+for hostname, data in device_summary.items():
+    avg_severity = round(data['total_severity'] / max(1, data['incident_count']), 1)
+    avg_affected = round(data['total_affected'] / max(1, data['incident_count']))
+    problem_rows.append({
+        'device_hostname': hostname,
+        'site': data['site'],
+        'device_type': data['device_type'],
+        'incident_count': data['incident_count'],
+        'avg_severity_score': avg_severity,
+        'total_cost_sek': format_sek(data['total_cost']),
+        'avg_affected_users': avg_affected,
+        'in_last_weeks_warnings': 'yes' if data['in_last_weeks_warnings'] else 'no'
+    })
+
+fieldnames = [
+    'device_hostname', 
+    'site', 
+    'device_type', 
+    'incident_count',
+    'avg_severity_score', 
+    'total_cost_sek', 
+    'avg_affected_users', 
+    'in_last_weeks_warnings'
+]
+
+with open('problem_devices.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(problem_rows)

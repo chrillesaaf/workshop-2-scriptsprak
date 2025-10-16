@@ -1,0 +1,35 @@
+device_hostname,site,device_type,incident_count,avg_severity_score,total_cost_sek,avg_affected_users,in_last_weeks_warnings
+SW-CORE-01,Huvudkontor,switch,2,5.8,"7 458,25",26,yes
+AP-LAGER-02,Lager,access_point,2,7.2,"22 513,25",50,no
+SW-DC-TOR-01,Datacenter,switch,2,5.2,"4 221,50",56,no
+AP-MAL-01,Kontor Malmö,access_point,2,6.2,"22 134,50",40,no
+SW-ACCESS-05,Huvudkontor,switch,1,7.8,"6 789,25",34,no
+SW-DC-TOR-02,Datacenter,switch,4,9.1,"86 048,90",159,yes
+RT-LAGER-01,Lager,router,3,6.8,"34 901,15",36,yes
+SW-DR-01,Säkerhetskopia,switch,3,3.5,"5 258,50",7,no
+AP-FLOOR2-02,Huvudkontor,access_point,2,8.4,"29 111,00",63,no
+FW-DC-01,Datacenter,firewall,2,7.7,"14 134,50",134,no
+SW-MAL-ACC-02,Kontor Malmö,switch,1,6.2,"2 890,00",16,no
+AP-LAGER-01,Lager,access_point,2,4.4,"4 357,25",16,yes
+RT-EDGE-02,Huvudkontor,router,1,7.6,"8 234,50",45,no
+RT-DR-01,Säkerhetskopia,router,2,7.0,"26 912,50",10,no
+FW-MAL-01,Kontor Malmö,firewall,1,2.1,"567,50",23,no
+SW-DIST-02,Huvudkontor,switch,1,5.9,"3 123,00",29,no
+SW-LAGER-02,Lager,switch,2,6.9,"11 679,50",44,yes
+LB-DC-01,Datacenter,load_balancer,1,6.3,"4 567,25",78,no
+AP-FLOOR1-02,Huvudkontor,access_point,1,3.8,"1 345,75",15,no
+SW-MAL-CORE-01,Kontor Malmö,switch,1,7.9,"9 876,25",67,no
+SW-ACCESS-03,Huvudkontor,switch,1,9.6,"45 678,90",87,no
+FW-DR-01,Säkerhetskopia,firewall,2,5.2,"9 545,00",8,no
+SW-DC-CORE-02,Datacenter,switch,1,6.8,"5 234,75",234,no
+AP-MAL-02,Kontor Malmö,access_point,1,7.4,"6 543,50",43,no
+RT-EDGE-01,Huvudkontor,router,1,4.1,"2 156,25",12,no
+FW-DC-02,Datacenter,firewall,1,7.7,"8 765,50",145,no
+RT-MAL-01,Kontor Malmö,router,2,6.3,"28 579,25",38,no
+AP-FLOOR3-01,Huvudkontor,access_point,1,6.1,"4 321,25",38,no
+SW-MAL-ACC-01,Kontor Malmö,switch,1,5.1,"2 123,50",24,no
+LB-DC-02,Datacenter,load_balancer,1,8.4,"11 234,25",198,no
+FW-DMZ-01,Huvudkontor,firewall,1,6.4,"3 456,90",52,no
+SW-LAGER-01,Lager,switch,1,6.6,"4 678,25",41,no
+SW-DC-CORE-01,Datacenter,switch,1,6.7,"5 789,75",123,no
+SW-DIST-01,Huvudkontor,switch,1,3.4,"1 678,75",8,no

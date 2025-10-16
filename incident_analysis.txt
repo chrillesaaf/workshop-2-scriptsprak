@@ -81,9 +81,9 @@ Incident overview per site
 ---------------------------------------------
 SITE              INCIDENTS    TOTAL COST (SEK)  AVG RESOLUTION (MIN)
 Huvudkontor       13           113 353,80 SEK    103.85         
+Säkerhetskopia    7            41 716,00 SEK     112.86         
 Kontor Malmö      9            72 714,50 SEK     107.22         
 Datacenter        13           139 996,40 SEK    110.00         
-Säkerhetskopia    7            41 716,00 SEK     112.86         
 Lager             10           78 129,40 SEK     127.30         
 
 ---------------------------------------------
