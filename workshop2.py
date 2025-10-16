@@ -28,7 +28,6 @@ with open('network_incidents.csv', encoding='utf-8') as f:
         for row in csv.DictReader(f)
     ]
 
-
 # Open salaries.csv, read as an list of dictionary items
 # to the variable salaries
 with open('network_incidents.csv', encoding='utf-8') as f:
@@ -287,7 +286,7 @@ report = summary + report
 with open('incident_analysis.txt', 'w', encoding='utf-8') as f:
     f.write(report)
 
-# ---------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def format_sek(amount):
     return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
@@ -340,6 +339,8 @@ with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
             'avg_resolution_minutes': avg_resolution,
             'total_cost_sek': format_sek(data['cost_total'])
         })
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def format_sek(amount):
     return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
@@ -423,3 +424,39 @@ with open('problem_devices.csv', 'w', newline='', encoding='utf-8') as f:
     writer = csv.DictWriter(f, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(problem_rows)
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+def format_sek(amount):
+    return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
+
+week_summary = defaultdict(lambda: {'total_cost': 0.0, 'total_impact': 0.0, 'count': 0})
+
+for row in incidents:
+    week = row.get('week_number', '').strip()
+    if not week:
+        continue
+
+    cost = row.get('cost_sek', 0.0) or 0.0
+    impact = row.get('impact_score', 0.0) or 0.0
+
+
+    week_summary[week]['total_cost'] += cost
+    week_summary[week]['total_impact'] += impact
+    week_summary[week]['count'] += 1
+
+cost_rows = []
+for week, data in sorted(week_summary.items()):
+    avg_impact = round(data['total_impact'] / max(1, data['count']), 2)
+    cost_rows.append({
+        'week_number': week,
+        'total_cost_sek': format_sek(data['total_cost']),
+        'avg_impact_score': f"{avg_impact:,.2f}".replace(".", ",")
+    })
+
+fieldnames = ['week_number', 'total_cost_sek', 'avg_impact_score']
+
+with open('cost_analysis.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(cost_rows)
