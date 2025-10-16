@@ -2,7 +2,7 @@
              INCIDENT ANALYSIS - SEPTEMBER 2024
 ==========================================================
 Analysisperiod: 2024-09-01 to 2024-09-30
-Total incidents:  52
+Total incidents:  52 st
 Total cost: 445 910,10 SEK
 
 EXECUTIVE SUMMARY
@@ -26,20 +26,20 @@ Low        12 st 23% - Average: 107 min resolution, 1 612,80 SEK /incident
 Show sites and analysis period
 ---------------------------------------------
 SITE                 WEEKS ANALYZED
-Huvudkontor          36, 37, 38, 39
-Lager                36, 37, 38
 Datacenter           36, 37, 38, 39
+Huvudkontor          36, 37, 38, 39
 Kontor Malmö         36, 37, 38
+Lager                36, 37, 38
 Säkerhetskopia       36, 37, 38
 
 ---------------------------------------------
 Incident count by severity
 ---------------------------------------------
 SEVERITY     COUNT
-Critical     10
-High         13
-Medium       17
-Low          12
+Critical     10 st
+High         13 st
+Medium       17 st
+Low          12 st
 
 ---------------------------------------------
 Incidents affecting more than 100 users
@@ -71,20 +71,20 @@ Total cost: 445 910,10 SEK
 ---------------------------------------------
 Average resolution time per severity level
 ---------------------------------------------
-Critical     118.8 minutes
-High         108.46 minutes
-Medium       113.24 minutes
-Low          107.08 minutes
+Critical     118.80 min
+High         108.46 min
+Medium       113.24 min
+Low          107.08 min
 
 ---------------------------------------------
 Incident overview per site
 ---------------------------------------------
 SITE              INCIDENTS    TOTAL COST (SEK)  AVG RESOLUTION (MIN)
-Datacenter        13           139 996,40 SEK    110.00         
-Kontor Malmö      9            72 714,50 SEK     107.22         
-Säkerhetskopia    7            41 716,00 SEK     112.86         
-Huvudkontor       13           113 353,80 SEK    103.85         
-Lager             10           78 129,40 SEK     127.30         
+Datacenter        13 st        139 996,40 SEK    110.00
+Huvudkontor       13 st        113 353,80 SEK    103.85
+Kontor Malmö      9 st         72 714,50 SEK     107.22
+Lager             10 st        78 129,40 SEK     127.30
+Säkerhetskopia    7 st         41 716,00 SEK     112.86
 
 ---------------------------------------------
 Average impact score per category

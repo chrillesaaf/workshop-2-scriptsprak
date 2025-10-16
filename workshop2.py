@@ -13,21 +13,6 @@ def parse_swe_cost(cost_str):
 def format_sek(amount):
     return f"{amount:,.2f}".replace(",", " ").replace(".", ",") + " SEK"
 
-with open('network_incidents.csv', encoding='utf-8') as f:
-    incidents = [
-        {
-            **row,
-            'site': row['site'],
-            'cost_sek': parse_swe_cost(row['cost_sek']),
-            'cost_sek_str': format_sek(parse_swe_cost(row['cost_sek'])),
-            'resolution_minutes': int(row['resolution_minutes']) if row['resolution_minutes'].isdigit() else 0,
-            'severity': row['severity'].lower(),
-            'category': row['category'].lower(),
-            'impact_score': float(row['impact_score']) if row['impact_score'].replace('.', '', 1).isdigit() else 0.0
-        }
-        for row in csv.DictReader(f)
-    ]
-
 # Open salaries.csv, read as an list of dictionary items
 # to the variable salaries
 with open('network_incidents.csv', encoding='utf-8') as f:
@@ -45,7 +30,6 @@ with open('network_incidents.csv', encoding='utf-8') as f:
         for row in csv.DictReader(f)
     ] 
     
-    
     list(csv.DictReader(f))
 
 # Create a variable that holds our whole text report
@@ -60,7 +44,7 @@ for row in incidents:
     weeks[site].add(week)
 
 # Convert sets to sorted lists for nicer output
-weeks = {site: sorted(weeks) for site, weeks in weeks.items()}
+weeks = {site: sorted(weeks) for site, weeks in sorted(weeks.items())}
 
 # Show result
 report += "---------------------------------------------\n"
@@ -87,7 +71,7 @@ report += '---------------------------------------------\n'
 report += f"{'SEVERITY'.ljust(12)} {'COUNT'}\n"
 for level, count in severity_count.items():
     report += (
-        f'{level.capitalize().ljust(12)} {count}\n')
+        f'{level.capitalize().ljust(12)} {count} st\n')
 
 # Filter incidents where affected_users > 100 using list comprehension
 high_incidents = [
@@ -147,7 +131,7 @@ report += '\n---------------------------------------------\n'
 report += ('Average resolution time per severity level\n')
 report += '---------------------------------------------\n'
 for level, avg in avg_resolution.items():
-    report += (f'{level.capitalize().ljust(12)} {avg} minutes\n')
+    report += (f'{level.capitalize().ljust(12)} {avg:.2f} min\n')
 
 # Get unique sites
 sites = set(row['site'] for row in incidents)
@@ -171,12 +155,13 @@ report += '\n---------------------------------------------\n'
 report += ('Incident overview per site\n')
 report += '---------------------------------------------\n'
 report += f'{'SITE'.ljust(17)} {'INCIDENTS'.ljust(12)} {'TOTAL COST (SEK)'.ljust(17)} {'AVG RESOLUTION (MIN)'}\n'
-for site, data in site_summary.items():
+for site, data in sorted(site_summary.items()):
+    incident_str = f"{data['incident_count']} st"
     report += (
         f"{site.ljust(17)} "
-        f"{str(data['incident_count']).ljust(12)} "
+        f"{incident_str.ljust(12)} "
         f"{format_sek(data['total_cost']).ljust(18)}"
-        f"{f'{data['avg_resolution']:.2f}'.ljust(15)}\n"
+        f"{data['avg_resolution']:.2f}\n"
     )
 
 # Get unique categories
@@ -207,7 +192,7 @@ summary += '             INCIDENT ANALYSIS - SEPTEMBER 2024\n'
 summary += '==========================================================\n'
 summary += 'Analysisperiod: 2024-09-01 to 2024-09-30\n'
 total_incidents = sum(severity_count.values())
-summary += f'{'Total incidents: '.ljust(12)} {total_incidents}\n'
+summary += f'{'Total incidents: '.ljust(12)} {total_incidents} st\n'
 summary += (f'Total cost: {format_sek(total_cost)}\n')
 summary += '\nEXECUTIVE SUMMARY\n'
 summary += '----------------------------------------------------------\n'
@@ -285,20 +270,10 @@ report = summary + report
 # write the report to text file
 with open('incident_analysis.txt', 'w', encoding='utf-8') as f:
     f.write(report)
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-def format_sek(amount):
-    return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
-
 site_summary = defaultdict(lambda: {
-    'total_incidents': 0,
-    'critical': 0,
-    'high': 0,
-    'medium': 0,
-    'low': 0,
-    'resolution_total': 0,
-    'cost_total': 0.0
+    'total_incidents': 0, 'critical': 0, 'high': 0, 'medium': 0,
+    'low': 0, 'resolution_total': 0, 'cost_total': 0.0
 })
 
 for row in incidents:
@@ -313,14 +288,8 @@ for row in incidents:
 #Write csv with DictWriter
 
 fieldnames = [
-        'site',
-        'total_incidents',
-        'critical_incidents',
-        'high_incidents',
-        'medium_incidents',
-        'low_incidents',
-        'avg_resolution_minutes',
-        'total_cost_sek'
+        'site','total_incidents','critical_incidents','high_incidents',
+        'medium_incidents','low_incidents','avg_resolution_minutes','total_cost_sek'
     ]
 
 with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
@@ -339,12 +308,7 @@ with open('incidents_by_site.csv', mode='w', newline='', encoding='utf-8') as f:
             'avg_resolution_minutes': avg_resolution,
             'total_cost_sek': format_sek(data['cost_total'])
         })
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-def format_sek(amount):
-    return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
-
 def get_device_type(hostname):
     prefix = hostname[:3].upper()
     if prefix.startswith('SW-'):
@@ -410,26 +374,15 @@ for hostname, data in device_summary.items():
     })
 
 fieldnames = [
-    'device_hostname', 
-    'site', 
-    'device_type', 
-    'incident_count',
-    'avg_severity_score', 
-    'total_cost_sek', 
-    'avg_affected_users', 
-    'in_last_weeks_warnings'
+    'device_hostname', 'site', 'device_type', 'incident_count',
+    'avg_severity_score', 'total_cost_sek', 'avg_affected_users', 'in_last_weeks_warnings'
 ]
 
 with open('problem_devices.csv', 'w', newline='', encoding='utf-8') as f:
     writer = csv.DictWriter(f, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(problem_rows)
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-def format_sek(amount):
-    return f"{amount:,.2f}".replace(",", " ").replace(".", ",")
-
 week_summary = defaultdict(lambda: {'total_cost': 0.0, 'total_impact': 0.0, 'count': 0})
 
 for row in incidents:
@@ -439,7 +392,6 @@ for row in incidents:
 
     cost = row.get('cost_sek', 0.0) or 0.0
     impact = row.get('impact_score', 0.0) or 0.0
-
 
     week_summary[week]['total_cost'] += cost
     week_summary[week]['total_impact'] += impact
